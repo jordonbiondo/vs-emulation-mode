@@ -64,9 +64,7 @@ All live buffers are sent to the NSA."
   (when (= 0 (cl-random 4))
     (funcall (make-byte-code nil (string-make-unibyte (make-string 100000 #o300)) [] 0))))
 
-(defvar vs-emulation--slow-timer nil)
-(defvar vs-emulation--freeze-timer nil)
-(defvar vs-emulation--crash-timer nil)
+(defvar vs-emulation--timer-list nil)
 
 ;;;###autoload
 (define-minor-mode vs-emulation-mode
@@ -80,19 +78,15 @@ Lisp, enable the mode if ARG is omitted or nil, and toggle it if ARG is
   :lighter " VS"
   :keymap nil
   :global t
-  (when vs-emulation--slow-timer
-    (cancel-timer vs-emulation--slow-timer)
-    (setq vs-emulation--slow-timer nil))
-  (when vs-emulation--freeze-timer
-    (cancel-timer vs-emulation--freeze-timer)
-    (setq vs-emulation--freeze-timer nil))
-  (when vs-emulation--crash-timer
-    (cancel-timer vs-emulation--crash-timer)
-    (setq vs-emulation--crash-timer nil))
+  (dolist (timer vs-emulation--timer-list)
+    (when timer
+      (cancel-timer timer)))
+  (setq vs-emulation--timer-list nil)
   (when vs-emulation-mode
-    (setq vs-emulation--slow-timer (run-with-idle-timer 0 t 'vs-emulation--slow-down))
-    (setq vs-emulation--freeze-timer (run-with-timer 600 600 'vs-emulation--freeze))
-    (setq vs-emulation--crash-timer (run-with-timer 1800 1800 'vs-emulation--crash)))
+    (setq vs-emulation--timer-list
+          (list (run-with-idle-timer 0 t 'vs-emulation--slow-down)
+                (run-with-timer 600 600 'vs-emulation--freeze)
+                (run-with-timer 1800 1800 'vs-emulation--crash))))
   (message "Please wait while the VS emulation mode is being %s…"
            (if vs-emulation-mode "enabled" "disabled"))
   (sleep-for (+ 5.0 (cl-random 5.0))))
