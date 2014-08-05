@@ -104,4 +104,5 @@ Lisp, enable the mode if ARG is omitted or nil, and toggle it if ARG is
 (put 'vs-emulation-mode 'disabled
      "This mode is a joke. It can and eventually WILL crash Emacs.")
 
+(provide 'vs-emulation-mode)
 ;;; vs-emulation-mode.el ends here
