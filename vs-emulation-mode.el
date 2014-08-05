@@ -48,7 +48,7 @@
 
 (defun vs-emulation--slow-down ()
   "Randomly slow down Emacs by sleeping."
-  (when (= 0 (cl-random 25))
+  (when (= 0 (cl-random 20))
     (sleep-for (+ 0.2 (cl-random 0.3)))))
 
 (defun vs-emulation--freeze ()
