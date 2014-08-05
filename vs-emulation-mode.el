@@ -80,7 +80,7 @@ Lisp, enable the mode if ARG is omitted or nil, and toggle it if ARG is
   :keymap nil
   :global t
   (message "Please wait while the VS emulation mode is being %s…"
-           (if vs-emulation-mode "enabled" "disabled"))
+           (if vs-emulation-mode "prepared" "shut down"))
   (dolist (timer vs-emulation--timer-list)
     (when timer
       (cancel-timer timer)))
