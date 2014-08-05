@@ -1,4 +1,4 @@
-;;; vs-emulation-mode.el --- Certain proprietary IDE emulation mode -*- lexical-binding: t -*-
+;;; vs-emulation-mode.el --- Emulate a certain proprietary IDE -*- lexical-binding: t -*-
 
 ;; Author: Fanael Linithien <fanael4@gmail.com>
 ;; URL: https://github.com/Fanael/vs-emulation-mode
