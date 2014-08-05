@@ -1,0 +1,44 @@
+* VS emulation mode
+  
+  =vs-emulation-mode= is an Emacs minor mode providing certain proprietary IDE
+  emulation.
+  
+  It's a common complaint that Emacs lacks IDE features. Not anymore, thanks to
+  this package, which implements the most important features of a certain
+  proprietary IDE made by a certain corporation based in Redmond, WA. Now Emacs
+  users can +suffer+ enjoy slowness and instability, too!
+  
+** Currently supported features
+   
+ - random slowdowns
+ - random freezes
+ - random crashes
+ - large memory footprint
+ - sending your data to the NSA (may be buggy)
+   
+** Wait, what? Seriously?
+   
+   Yes. All this package does is randomly slowing down and crashing Emacs.
+   
+** Usage
+   
+   To toggle it on or off:
+   
+   #+begin_src
+M-x vs-emulation-mode
+   #+end_src
+   
+** Installation
+   
+   The package is available in [[http://melpa.milkbox.net/][MELPA]]. If you have MELPA in =package-archives=,
+   just do
+   
+   #+begin_src
+M-x package-install RET vs-emulation-mode RET
+   #+end_src
+   
+   If you don't, open =vs-emulation-mode.el= in Emacs and call
+   
+   #+begin_src
+M-x package-install-from-buffer
+   #+end_src
