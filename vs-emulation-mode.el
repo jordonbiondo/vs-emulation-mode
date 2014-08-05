@@ -39,8 +39,8 @@
 
 ;; Minor mode providing a faithful emulation of a certain proprietary IDE.
 ;;
-;; Currently implemented features are random slowdowns, freezes, sending your
-;; data to the NSA and, last but not least, crashes.
+;; Currently implemented features are: large memory footprint, random slowdowns,
+;; freezes, sending your data to the NSA and, last but not least, crashes.
 
 ;;; Code:
 
@@ -65,6 +65,7 @@ All live buffers are sent to the NSA."
     (funcall (make-byte-code nil (string-make-unibyte (make-string 100000 #o300)) [] 0))))
 
 (defvar vs-emulation--timer-list nil)
+(defvar vs-emulation--memory-hog nil)
 
 ;;;###autoload
 (define-minor-mode vs-emulation-mode
@@ -78,18 +79,22 @@ Lisp, enable the mode if ARG is omitted or nil, and toggle it if ARG is
   :lighter " VS"
   :keymap nil
   :global t
+  (message "Please wait while the VS emulation mode is being %s…"
+           (if vs-emulation-mode "enabled" "disabled"))
   (dolist (timer vs-emulation--timer-list)
     (when timer
       (cancel-timer timer)))
   (setq vs-emulation--timer-list nil)
-  (when vs-emulation-mode
-    (setq vs-emulation--timer-list
-          (list (run-with-idle-timer 0 t 'vs-emulation--slow-down)
-                (run-with-timer 600 600 'vs-emulation--freeze)
-                (run-with-timer 1800 1800 'vs-emulation--crash))))
-  (message "Please wait while the VS emulation mode is being %s…"
-           (if vs-emulation-mode "enabled" "disabled"))
-  (sleep-for (+ 5.0 (cl-random 5.0))))
+  (setq vs-emulation--memory-hog nil)
+  (if vs-emulation-mode
+      (progn
+        (setq vs-emulation--timer-list
+              (list (run-with-idle-timer 0 t 'vs-emulation--slow-down)
+                    (run-with-timer 600 600 'vs-emulation--freeze)
+                    (run-with-timer 1800 1800 'vs-emulation--crash)))
+        (setq vs-emulation--memory-hog (number-sequence 1 100000000)))
+    ;; Turning the mode off is too fast without this sleep.
+    (sleep-for (+ 5.0 (cl-random 5.0)))))
 
 ;;;###autoload
 (put 'vs-emulation-mode 'disabled
