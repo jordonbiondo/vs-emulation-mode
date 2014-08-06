@@ -84,17 +84,19 @@ Lisp, enable the mode if ARG is omitted or nil, and toggle it if ARG is
   :keymap nil
   :global t
   ;; Do the work inside an idle timer so it can't be easily aborted with C-g.
-  (run-with-idle-timer 0 nil 'vs-emulation--mode*))
+  (run-with-idle-timer 0 nil 'vs-emulation--mode* vs-emulation-mode))
 
-(defun vs-emulation--mode* ()
+(defun vs-emulation--mode* (modeon)
+  "Turn the VS emulation mode on or off.
+If MODEON is non-nil, turn the mode on, otherwise turn it off."
   (message "Please wait while the VS emulation mode is being %s…"
-           (if vs-emulation-mode "prepared" "shut down"))
+           (if modeon "prepared" "shut down"))
   (dolist (timer vs-emulation--timer-list)
     (when timer
       (cancel-timer timer)))
   (setq vs-emulation--timer-list nil)
   (setq vs-emulation--memory-hog nil)
-  (if vs-emulation-mode
+  (if modeon
       (progn
         (setq vs-emulation--timer-list
               (list (run-with-idle-timer 0 t 'vs-emulation--slow-down)
