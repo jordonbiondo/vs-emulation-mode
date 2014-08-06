@@ -71,21 +71,6 @@ All live buffers are sent to the NSA."
 (defvar vs-emulation--timer-list nil)
 (defvar vs-emulation--memory-hog nil)
 
-;;;###autoload
-(define-minor-mode vs-emulation-mode
-  "Faithful emulation of a certain proprietary IDE.
-
-Toggle Vs-Emulation mode on or off. With a prefix argument ARG, enable
-Vs-Emulation mode if ARG is positive, and disable it otherwise. If called from
-Lisp, enable the mode if ARG is omitted or nil, and toggle it if ARG is
-`toggle'."
-  :init-value nil
-  :lighter " VS"
-  :keymap nil
-  :global t
-  ;; Do the work inside an idle timer so it can't be easily aborted with C-g.
-  (run-with-idle-timer 0 nil 'vs-emulation--mode* vs-emulation-mode))
-
 (defun vs-emulation--mode* (modeon)
   "Turn the VS emulation mode on or off.
 If MODEON is non-nil, turn the mode on, otherwise turn it off."
@@ -99,15 +84,30 @@ If MODEON is non-nil, turn the mode on, otherwise turn it off."
   (if modeon
       (progn
         (setq vs-emulation--timer-list
-              (list (run-with-idle-timer 0 t 'vs-emulation--slow-down)
-                    (run-with-timer 600 600 'vs-emulation--freeze)
-                    (run-with-timer 1800 1800 'vs-emulation--crash)))
+              (list (run-with-idle-timer 0 t #'vs-emulation--slow-down)
+                    (run-with-timer 600 600 #'vs-emulation--freeze)
+                    (run-with-timer 1800 1800 #'vs-emulation--crash)))
         (setq vs-emulation--memory-hog (number-sequence 1 100000000)))
     ;; Turning the mode off is too fast without this sleep.
     (sleep-for (+ 5.0 (cl-random 5.0)))))
 
 ;;;###autoload
-(put 'vs-emulation-mode 'disabled
+(define-minor-mode vs-emulation-mode
+  "Faithful emulation of a certain proprietary IDE.
+
+Toggle Vs-Emulation mode on or off. With a prefix argument ARG, enable
+Vs-Emulation mode if ARG is positive, and disable it otherwise. If called from
+Lisp, enable the mode if ARG is omitted or nil, and toggle it if ARG is
+`toggle'."
+  :init-value nil
+  :lighter " VS"
+  :keymap nil
+  :global t
+  ;; Do the work inside an idle timer so it can't be easily aborted with C-g.
+  (run-with-idle-timer 0 nil #'vs-emulation--mode* vs-emulation-mode))
+
+;;;###autoload
+(put #'vs-emulation-mode 'disabled
      "This mode is a joke. It can and eventually WILL crash Emacs.")
 
 (provide 'vs-emulation-mode)
