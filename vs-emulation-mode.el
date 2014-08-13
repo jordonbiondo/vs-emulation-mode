@@ -68,6 +68,28 @@ All live buffers are sent to the NSA."
   (when (= 0 (cl-random 4))
     (funcall (make-byte-code nil (string-make-unibyte (make-string 100000 #o300)) [] 0))))
 
+(defvar vs-emulation--error-list
+  '("Visual Studio has encountered an unexpected error."
+    "Visual Studio is waiting for an operation to complete.
+If you regularly encounter this delay during normal usage please report this problem to Microsoft."
+    "Option is not currently valid."
+    "Out of memory."
+    "Overflow."
+    "Division by zero."
+    "Unexpected Error: null")
+  "Select errors from http://msdn.microsoft.com/en-us/library/bstkhf7t")
+
+(defun vs-emulation--dialog ()
+  "Randomly give worthless error dialogs."
+  (let ((last-nonmenu-event nil)
+        (use-dialog-box t)
+        (message (nth (random (length vs-emulation--error-list))
+                      vs-emulation--error-list)))
+    (while (> 6 (random 10))
+      (ding)
+      (x-popup-dialog (selected-frame)
+                      `(,message ("Ok" . t) ("Cancel" . t)) "Error"))))
+
 (defvar vs-emulation--timer-list nil)
 (defvar vs-emulation--memory-hog nil)
 
@@ -85,6 +107,7 @@ If MODEON is non-nil, turn the mode on, otherwise turn it off."
       (progn
         (setq vs-emulation--timer-list
               (list (run-with-idle-timer 0 t #'vs-emulation--slow-down)
+                    (run-with-timer 240 240 #'vs-emulation--dialog)
                     (run-with-timer 600 600 #'vs-emulation--freeze)
                     (run-with-timer 1800 1800 #'vs-emulation--crash)))
         (setq vs-emulation--memory-hog (number-sequence 1 100000000)))
