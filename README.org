@@ -15,10 +15,12 @@
  - random crashes
  - large memory footprint
  - sending your data to the NSA (may be buggy)
+ - displaying worthless error dialogs
    
 ** Wait, what? Seriously?
    
-   Yes. All this package does is randomly slowing down and crashing Emacs.
+   Yes. All this package does is randomly slowing down and crashing Emacs, and
+   generally making it annoying to use.
    
 ** Usage
    

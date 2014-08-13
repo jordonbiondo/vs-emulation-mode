@@ -43,8 +43,9 @@
 ;; * large memory footprint
 ;; * random slowdowns
 ;; * random freezes
-;; * sending your data to the NSA
-;; * and last but not least, random crashes
+;; * random crashes
+;; * sending your data to the NSA (may be buggy)
+;; * displaying worthless error dialogs
 
 ;;; Code:
 
